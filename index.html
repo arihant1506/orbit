@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orbit Routine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime?deps=react@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1?deps=react@18.2.0",
+    "recharts": "https://esm.sh/recharts@2.12.0?deps=react@18.2.0,react-dom@18.2.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+              mono: ['Space Grotesk', 'monospace'],
+            },
+            colors: {
+              orbit: {
+                bg: '#030014',
+                lightBg: '#f8fafc', // Slate-50 for light mode
+                glass: 'rgba(255, 255, 255, 0.05)',
+                glassBorder: 'rgba(255, 255, 255, 0.1)',
+                neonPurple: '#d946ef',
+                neonBlue: '#00f0ff',
+                neonGreen: '#39ff14',
+              }
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'cyber-glitch': 'glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
+              'impulse': 'impulse 0.5s cubic-bezier(0.4, 0, 0.2, 1) both',
+              'chromatic-wipe': 'chromatic 0.6s ease-in-out both',
+              'shrink-lock': 'shrinkLock 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both',
+              'shimmer': 'shimmer 2.5s linear infinite',
+              'typewriter': 'typewriter 2s steps(40, end) both',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              glitch: {
+                '0%': { transform: 'translate(0)' },
+                '20%': { transform: 'translate(-2px, 2px)', opacity: '0.8', filter: 'hue-rotate(90deg)' },
+                '40%': { transform: 'translate(-2px, -2px)', filter: 'contrast(2)' },
+                '60%': { transform: 'translate(2px, 2px)', opacity: '1', filter: 'hue-rotate(-90deg)' },
+                '80%': { transform: 'translate(2px, -2px)', filter: 'invert(0.2)' },
+                '100%': { transform: 'translate(0)', opacity: '0.5', filter: 'grayscale(0.8)' }
+              },
+              impulse: {
+                '0%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.05)', boxShadow: '0 0 30px currentColor' },
+                '100%': { transform: 'scale(0.99)', opacity: '0.5', filter: 'grayscale(0.8)' }
+              },
+              chromatic: {
+                 '0%': { filter: 'brightness(1)' },
+                 '50%': { filter: 'brightness(2) hue-rotate(180deg) blur(2px)' },
+                 '100%': { filter: 'grayscale(0.8) brightness(0.7)' }
+              },
+              shrinkLock: {
+                '0%': { transform: 'scaleY(1)' },
+                '40%': { transform: 'scaleY(0.95)', background: '#ffffff' },
+                '100%': { transform: 'scaleY(1)', opacity: '0.5', filter: 'grayscale(0.8)' }
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '200% 0' },
+                '100%': { backgroundPosition: '-200% 0' }
+              },
+              typewriter: {
+                '0%': { opacity: '0', transform: 'translateX(-10px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        /* Default base, handled by React root now mostly */
+        background-color: #030014;
+        color: #e2e8f0;
+        overflow-x: hidden;
+      }
+      
+      /* Cinematic Noise Overlay */
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: overlay;
+      }
+
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+
+      /* Custom aesthetic scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #d946ef; 
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
